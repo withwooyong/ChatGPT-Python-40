@@ -20,6 +20,6 @@ def quiz(words):
             print(f"틀렸습니다. 정답은 {meaning}입니다.")
 
 if __name__ == "__main__":
-    filename = r"30.단어 암기 프로그램\단어.txt"
+    filename = "단어.txt"
     words = load_words(filename)
     quiz(words)

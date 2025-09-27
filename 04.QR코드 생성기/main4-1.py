@@ -1,7 +1,7 @@
 import qrcode
 
 # QR 코드에 넣을 데이터
-data = "Hello, World!"
+data = "Hello, Ted!"
 
 # QR 코드 생성
 img = qrcode.make(data)

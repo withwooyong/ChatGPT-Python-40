@@ -2,7 +2,7 @@ import sqlite3
 import matplotlib.pyplot as plt
 
 # 데이터베이스 파일에 연결
-conn = sqlite3.connect(r'26.데이터베이스의 데이터 읽어 그래프 그리기\upbit.db')
+conn = sqlite3.connect('upbit.db')
 
 # 쿼리문 작성
 query = 'SELECT * FROM BTC_KRW'

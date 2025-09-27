@@ -42,5 +42,21 @@ def crack_zip_password(zipfilename, digits=True, letters=True, max_length=9):
     # 비밀번호를 찾지 못한 경우 None을 반환합니다.
     return None
 
-password = crack_zip_password(r"06.압축파일 암호푼는 프로그램\암호.zip", digits=True, letters=True, max_length=9)
-print("비밀번호는:",password)
+# 현재 디렉토리에서 암호.zip 파일을 찾습니다
+import os
+zip_file = "암호.zip"
+
+if os.path.exists(zip_file):
+    print(f"압축 파일을 찾았습니다: {zip_file}")
+    print("비밀번호를 찾는 중... (시간이 오래 걸릴 수 있습니다)")
+    password = crack_zip_password(zip_file, digits=True, letters=True, max_length=6)
+    if password:
+        print(f"비밀번호를 찾았습니다: {password}")
+    else:
+        print("비밀번호를 찾지 못했습니다.")
+else:
+    print(f"압축 파일을 찾을 수 없습니다: {zip_file}")
+    print("현재 디렉토리의 파일들:")
+    for file in os.listdir("."):
+        if file.endswith(('.zip', '.ZIP')):
+            print(f"  - {file}")

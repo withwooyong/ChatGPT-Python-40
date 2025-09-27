@@ -1,12 +1,28 @@
 import os
-from distutils.dir_util import copy_tree
+import shutil
+import datetime
 
-source_dir = r'C:\0_project\173.챗GPT로 만드는 파이썬과 40개의 작품들\챗GPT로 만드는 파이썬 작품들\31.자동백업프로그램 만들기\원본폴더' # 복사할 폴더의 경로
-target_dir = r'C:\0_project\173.챗GPT로 만드는 파이썬과 40개의 작품들\챗GPT로 만드는 파이썬 작품들\31.자동백업프로그램 만들기\백업폴더' # 복사될 대상 폴더의 경로
+source_dir = '원본폴더' # 복사할 폴더의 경로
+target_dir = '백업폴더' # 복사될 대상 폴더의 경로
 
-if not os.path.exists(target_dir):
-    os.makedirs(target_dir) # 대상 폴더가 없을 경우 폴더를 생성합니다.
+# 원본 폴더가 존재하는지 확인
+if not os.path.exists(source_dir):
+    print(f"오류: 원본 폴더 '{source_dir}'가 존재하지 않습니다.")
+    exit(1)
 
-copy_tree(source_dir, target_dir) # source_dir의 모든 파일과 폴더를 target_dir로 복사합니다.
+# 백업 폴더가 이미 존재하는 경우 타임스탬프 추가
+if os.path.exists(target_dir):
+    timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+    target_dir = f"{target_dir}_{timestamp}"
 
-print("백업이 완료되었습니다!") # 백업이 완료되면 출력되는 메시지입니다.
+# 대상 폴더 생성
+os.makedirs(target_dir, exist_ok=True)
+
+try:
+    # 폴더 전체 복사
+    shutil.copytree(source_dir, target_dir, dirs_exist_ok=True)
+    print(f"백업이 완료되었습니다!")
+    print(f"원본: {source_dir}")
+    print(f"백업: {target_dir}")
+except Exception as e:
+    print(f"백업 중 오류가 발생했습니다: {e}")

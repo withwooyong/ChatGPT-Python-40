@@ -5,84 +5,77 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     questions = [
-        "1. 대체로 사람들과 어울리는 것을 좋아한다.",
-        "2. 논쟁보다는 타협하는 것이 좋다고 생각한다.",
-        "3. 대개 계획을 세우는 것을 좋아한다.",
-        "4. 새로운 일에 도전하는 것을 좋아한다.",
-        "5. 감정을 드러내는 것보다는 이성적으로 생각하는 것이 좋다고 생각한다.",
-        "6. 대체로 조용한 분위기를 좋아한다.",
-        "7. 사람들과의 대화에서 자주 말하는 편이다.",
-        "8. 어떤 일을 할 때 체계적으로 처리하는 편이다.",
-        "9. 강한 경쟁심이 있다.",
-        "10. 주로 자신의 감정에 따라 일을 처리한다."
+        "대체로 사람들과 어울리는 것을 좋아한다.",
+        "논쟁보다는 타협하는 것이 좋다고 생각한다.",
+        "대개 계획을 세우는 것을 좋아한다.",
+        "새로운 일에 도전하는 것을 좋아한다.",
+        "감정을 드러내는 것보다는 이성적으로 생각하는 것이 좋다고 생각한다.",
+        "대체로 조용한 분위기를 좋아한다.",
+        "사람들과의 대화에서 자주 말하는 편이다.",
+        "어떤 일을 할 때 체계적으로 처리하는 편이다.",
+        "강한 경쟁심이 있다.",
+        "주로 자신의 감정에 따라 일을 처리한다."
     ]
 
     return render_template('index.html', questions=questions)
 
 @app.route('/result', methods=['POST'])
 def result():
-    questions = [
-        "1. 대체로 사람들과 어울리는 것을 좋아한다.",
-        "2. 논쟁보다는 타협하는 것이 좋다고 생각한다.",
-        "3. 대개 계획을 세우는 것을 좋아한다.",
-        "4. 새로운 일에 도전하는 것을 좋아한다.",
-        "5. 감정을 드러내는 것보다는 이성적으로 생각하는 것이 좋다고 생각한다.",
-        "6. 대체로 조용한 분위기를 좋아한다.",
-        "7. 사람들과의 대화에서 자주 말하는 편이다.",
-        "8. 어떤 일을 할 때 체계적으로 처리하는 편이다.",
-        "9. 강한 경쟁심이 있다.",
-        "10. 주로 자신의 감정에 따라 일을 처리한다."
-    ]
+    try:
+        # 모든 질문에 답변했는지 확인
+        answers = {}
+        for i in range(1, 11):
+            answer = request.form.get('q' + str(i))
+            if not answer:
+                return render_template('error.html', message="모든 질문에 답변해주세요.")
+            answers[i] = int(answer)
 
-    results = {
-        "ISTJ": [1, 2, 3, 8, 10],
-        "ISFJ": [1, 2, 3, 6, 10],
-        "INFJ": [2, 3, 5, 6, 10],
-        "INTJ": [3, 4, 5, 8, 10],
-        "ISTP": [4, 6, 7, 9, 10],
-        "ISFP": [4, 6, 7, 10],
-        "INFP": [2, 5, 6, 10],
-        "INTP": [3, 5, 6, 8, 10],
-        "ESTP": [4, 6, 7, 9],
-        "ESFP": [1, 4, 6, 7, 10],
-        "ENFP": [1, 2, 5, 6, 10],
-        "ENTP": [3, 5, 7, 8, 10],
-        "ESTJ": [1, 3, 8, 9, 10],
-        "ESFJ": [1, 2, 6, 7, 10],
-        "ENFJ": [2, 3, 5, 6, 7],
-        "ENTJ": [3, 4, 5, 8, 9]
-    }
-
-    scores = { "E": 0, "I": 0, "S": 0, "N": 0, "T": 0, "F": 0, "J": 0, "P": 0 }
-
-    for i in range(1, 11):
-        answer = int(request.form['q' + str(i)])
-        for k, v in results.items():
-            if i in v:
-                if answer <= 3:
-                    scores[k[0]] += 1
+        # MBTI 점수 계산
+        scores = {"E": 0, "I": 0, "S": 0, "N": 0, "T": 0, "F": 0, "J": 0, "P": 0}
+        
+        # 각 질문별로 점수 계산
+        for i in range(1, 11):
+            answer = answers[i]
+            
+            # E/I (외향/내향)
+            if i in [1, 7]:  # 사람들과 어울리는 것, 자주 말하는 편
+                if answer >= 4:
+                    scores['E'] += 1
                 else:
-                    scores[k[1]] += 1
+                    scores['I'] += 1
+            
+            # S/N (감각/직관)
+            if i in [3, 8]:  # 계획 세우는 것, 체계적 처리
+                if answer >= 4:
+                    scores['S'] += 1
+                else:
+                    scores['N'] += 1
+            
+            # T/F (사고/감정)
+            if i in [2, 5, 10]:  # 타협, 이성적 사고, 감정에 따라 처리
+                if answer >= 4:
+                    scores['F'] += 1
+                else:
+                    scores['T'] += 1
+            
+            # J/P (판단/인식)
+            if i in [4, 6, 9]:  # 새로운 일 도전, 조용한 분위기, 경쟁심
+                if answer >= 4:
+                    scores['P'] += 1
+                else:
+                    scores['J'] += 1
 
-    result = ""
-    if scores['E'] > scores['I']:
-        result += "E"
-    else:
-        result += "I"
-    if scores['S'] > scores['N']:
-        result += "S"
-    else:
-        result += "N"
-    if scores['T'] > scores['F']:
-        result += "T"
-    else:
-        result += "F"
-    if scores['J'] > scores['P']:
-        result += "J"
-    else:
-        result += "P"
+        # MBTI 결과 결정
+        result = ""
+        result += "E" if scores['E'] > scores['I'] else "I"
+        result += "S" if scores['S'] > scores['N'] else "N"
+        result += "T" if scores['T'] > scores['F'] else "F"
+        result += "J" if scores['J'] > scores['P'] else "P"
 
-    return render_template('result.html', result=result)
+        return render_template('result.html', result=result, scores=scores)
+    
+    except Exception as e:
+        return render_template('error.html', message=f"오류가 발생했습니다: {str(e)}")
 
 if __name__ == '__main__':
     app.run()

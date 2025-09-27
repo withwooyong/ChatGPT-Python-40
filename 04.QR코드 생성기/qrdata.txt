@@ -1,3 +1,5 @@
-hello
-www.google.com
-chatgpt hello
+https://www.google.com
+https://www.naver.com
+https://www.github.com
+Hello, World!
+안녕하세요!

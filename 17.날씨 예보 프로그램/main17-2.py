@@ -19,6 +19,7 @@ while True:
 
     # JSON 데이터 파싱
     data = json.loads(response.text)
+    print(data)
 
     # 날씨 정보 저장
     current_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -28,7 +29,10 @@ while True:
 
     # 엑셀 파일에 데이터 추가
     ws.append([current_time.split()[0], current_time.split()[1], weather, temp, feels_like])
-    wb.save(r'17.날씨 예보 프로그램\날씨저장.xlsx')
+    wb.save(r'날씨저장.xlsx')
 
     # 30분 대기
+    print("30분 대기 후 다시 실행")
     time.sleep(1800)
+    
+    

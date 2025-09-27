@@ -1,7 +1,7 @@
 import pygame
 
 # 음악 파일 경로 설정
-file = r'18.음악 재생 프로그램\1번 안녕하세요.mp3'
+file = r'1번 안녕하세요.mp3'
 
 # 초기화
 pygame.init()

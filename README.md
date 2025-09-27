@@ -97,12 +97,14 @@
 
 ```bash
 git clone [repository-url]
-cd 채트GPT로-만드는-파이썬-작품들_소스코드
 ```
 
 2. 필요한 패키지 설치
 
 ```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install requests
 pip install -r requirements.txt
 ```
 

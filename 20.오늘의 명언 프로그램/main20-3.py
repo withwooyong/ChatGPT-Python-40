@@ -1,26 +1,6 @@
 import random
 import time
-import subprocess
-import os
-
-# macOS용 알림 함수 (osascript 사용)
-def show_notification(title, message):
-    try:
-        # macOS의 osascript를 사용한 알림
-        script = f'''
-        display notification "{message}" with title "{title}"
-        '''
-        subprocess.run(['osascript', '-e', script], check=True)
-    except Exception as e:
-        print(f"알림 오류: {e}")
-        print(f"제목: {title}")
-        print(f"내용: {message}")
-        # 알림 실패 시 콘솔에 출력
-        print(f"\n{'='*50}")
-        print(f"📢 {title}")
-        print(f"{'='*50}")
-        print(f"{message}")
-        print(f"{'='*50}\n")
+from datetime import datetime
 
 # 명언 리스트 생성
 sayings = [
@@ -36,14 +16,25 @@ sayings = [
     "성공한 사람을 보면 마치 그들이 실패한 적이 없는 것처럼 보이지만, 많은 실패들을 겪고 다시 일어난 것이다. - 왈트 디즈니",
 ]
 
-while True:
-    # 무작위로 명언 선택
+def show_quote():
+    """명언을 화면에 표시하는 함수"""
     saying = random.choice(sayings)
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    print(f"\n{'='*60}")
+    print(f"📢 오늘의 명언 - {current_time}")
+    print(f"{'='*60}")
+    print(f"💭 {saying}")
+    print(f"{'='*60}\n")
 
-    # macOS 알림으로 명언 보여주기
-    show_notification("명언 알림", saying)
-
-    # 1시간 대기 (테스트를 위해 10초로 변경)
-    time.sleep(10)
-
-
+if __name__ == "__main__":
+    print("명언 프로그램을 시작합니다...")
+    print("Ctrl+C를 눌러 종료할 수 있습니다.\n")
+    
+    try:
+        while True:
+            show_quote()
+            # 1시간 대기 (테스트를 위해 10초로 변경)
+            time.sleep(10)
+    except KeyboardInterrupt:
+        print("\n프로그램을 종료합니다. 좋은 하루 되세요! 🌟")

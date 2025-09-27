@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 import os
 
-PATH = r"35.플라스크 게시판 만들기\messages.txt"
+PATH = "messages.txt"
 
 app = Flask(__name__)
 

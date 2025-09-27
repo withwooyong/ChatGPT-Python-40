@@ -1,9 +1,83 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
     <title>MBTI 검사 결과</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin-top: 50px;
+        background-color: #f5f5f5;
+      }
+      .result-container {
+        background-color: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      .mbti-result {
+        font-size: 48px;
+        font-weight: bold;
+        color: #007bff;
+        margin: 20px 0;
+      }
+      .scores {
+        margin: 20px 0;
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+      }
+      .score-item {
+        margin: 10px;
+        padding: 10px;
+        background-color: #f8f9fa;
+        border-radius: 5px;
+        min-width: 100px;
+      }
+      .back-btn {
+        margin-top: 30px;
+      }
+      .back-btn a {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 5px;
+      }
+    </style>
   </head>
   <body>
-    <h1>당신의 MBTI 성격유형은 {{ result }}입니다.</h1>
+    <div class="result-container">
+      <h1>MBTI 검사 결과</h1>
+      <div class="mbti-result">{{ result }}</div>
+
+      {% if scores %}
+      <h3>세부 점수</h3>
+      <div class="scores">
+        <div class="score-item">
+          <strong>외향(E): {{ scores.E }}</strong><br />
+          내향(I): {{ scores.I }}
+        </div>
+        <div class="score-item">
+          <strong>감각(S): {{ scores.S }}</strong><br />
+          직관(N): {{ scores.N }}
+        </div>
+        <div class="score-item">
+          <strong>사고(T): {{ scores.T }}</strong><br />
+          감정(F): {{ scores.F }}
+        </div>
+        <div class="score-item">
+          <strong>판단(J): {{ scores.J }}</strong><br />
+          인식(P): {{ scores.P }}
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="back-btn">
+        <a href="/">다시 검사하기</a>
+      </div>
+    </div>
   </body>
 </html>

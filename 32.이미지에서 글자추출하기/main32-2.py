@@ -1,9 +1,11 @@
 import tkinter as tk
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
 from PIL import Image
 import pytesseract
+import os
 
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+# macOS에서 Tesseract 경로 설정
+pytesseract.pytesseract.tesseract_cmd = '/opt/homebrew/bin/tesseract'
 
 class OCRGUI:
     def __init__(self, master):
@@ -44,11 +46,24 @@ class OCRGUI:
     def extract_text(self):
         if not self.image_path:
             self.text_label.config(text='이미지를 선택하세요.')
+            messagebox.showwarning("경고", "이미지를 선택하세요.")
             return
         
-        image = Image.open(self.image_path)
-        text = pytesseract.image_to_string(image, lang=self.lang)
-        self.text_label.config(text=text)
+        try:
+            image = Image.open(self.image_path)
+            text = pytesseract.image_to_string(image, lang=self.lang)
+            
+            if text.strip():
+                self.text_label.config(text=text)
+                messagebox.showinfo("완료", "텍스트 추출이 완료되었습니다!")
+            else:
+                self.text_label.config(text="텍스트를 찾을 수 없습니다.")
+                messagebox.showinfo("알림", "이미지에서 텍스트를 찾을 수 없습니다.")
+                
+        except Exception as e:
+            error_msg = f"텍스트 추출 중 오류가 발생했습니다:\n{str(e)}"
+            self.text_label.config(text=error_msg)
+            messagebox.showerror("오류", error_msg)
 
 root = tk.Tk()
 app = OCRGUI(root)

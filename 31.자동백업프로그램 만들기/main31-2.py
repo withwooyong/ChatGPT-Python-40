@@ -1,7 +1,8 @@
 import os
+import shutil
+import datetime
 from tkinter import *
-from tkinter import filedialog
-from distutils.dir_util import copy_tree
+from tkinter import filedialog, messagebox
 
 root = Tk()
 root.geometry('300x200') # 프로그램의 크기를 설정합니다.
@@ -22,10 +23,23 @@ def choose_target_folder():
 
 def backup():
     if source_dir and target_dir:
-        copy_tree(source_dir, target_dir) # distutils.dir_util의 copy_tree 함수를 사용하여 원본 폴더를 대상 폴더로 복사합니다.
-        result_label.config(text="백업이 완료되었습니다!")
+        try:
+            # 백업 폴더가 이미 존재하는 경우 타임스탬프 추가
+            backup_target = target_dir
+            if os.path.exists(backup_target):
+                timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+                backup_target = os.path.join(target_dir, f"backup_{timestamp}")
+            
+            # 폴더 전체 복사
+            shutil.copytree(source_dir, backup_target, dirs_exist_ok=True)
+            result_label.config(text=f"백업이 완료되었습니다!\n저장 위치: {backup_target}")
+            messagebox.showinfo("백업 완료", f"백업이 완료되었습니다!\n저장 위치: {backup_target}")
+        except Exception as e:
+            result_label.config(text=f"백업 중 오류가 발생했습니다: {str(e)}")
+            messagebox.showerror("백업 오류", f"백업 중 오류가 발생했습니다:\n{str(e)}")
     else:
         result_label.config(text="원본 폴더와 대상 폴더를 선택해주세요.")
+        messagebox.showwarning("경고", "원본 폴더와 대상 폴더를 선택해주세요.")
 
 source_button = Button(root, text="원본 폴더 선택", command=choose_source_folder)
 source_button.pack(pady=10)
